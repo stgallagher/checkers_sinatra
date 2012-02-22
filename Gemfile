@@ -5,6 +5,7 @@ gem 'rspec'
 gem 'haml'
 gem 'sass'
 gem 'shotgun'
+gem 'mustache'
 
 group :test do
   gem 'pry'
