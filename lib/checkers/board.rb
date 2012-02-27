@@ -4,6 +4,7 @@ class Board
     board = Array.new(8)
     8.times { |index| board[index] = Array.new(8) }
     populate_checkers(board)
+    #p "IN BOARD::CREATE BOARD -> board = #{board.inspect}"
     board
   end
 

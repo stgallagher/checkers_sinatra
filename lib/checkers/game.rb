@@ -1,6 +1,6 @@
 class Game
 
-  attr_accessor :difficulty, :number_of_players, :game_board, :board, :gui, :single_player_game, :current_player , :x_orig, :y_orig, :x_dest, :y_dest
+  attr_accessor :difficulty, :number_of_players, :move_check, :game_board, :board, :gui, :single_player_game, :current_player , :x_orig, :y_orig, :x_dest, :y_dest
 
   def initialize(view)
     @view = view

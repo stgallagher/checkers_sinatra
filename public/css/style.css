@@ -1,0 +1,141 @@
+/* index/game setup */
+
+body {
+  font: 1em "lucida Grande",arial,sans-serif;
+  background: red center top no-repeat;
+  background-size: 100%;
+  color: #fff;
+}
+
+
+.button {
+  height: 100px;
+  width: 300px;
+  font-family: sans-serif;
+  font-weight:bold;
+  color: #fff;
+  padding:5px 10px 6px 10px;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+#play-button {
+  margin-top: 30px;
+  margin-left: 400px;
+  margin-bottom: 50px;
+}
+
+#load-button {
+  margin-top: 30px;
+  margin-left: 400px;
+  margin-bottom: 80px;
+}
+
+.red {
+  background:#FF1D23;
+  background-image: -moz-linear-gradient(top,#FF1D23,#5C0002);
+  background-image: -webkit-gradient(linear,left top, left bottom,	from(#FF1D23),	to(#5C0002)	);
+}
+
+.red:hover{background:#5C0002;}
+
+.large{font-size:24px;}
+
+.selector-label {
+  background: transparent;
+  width: 100px;
+  padding: 5px;
+  font: "lucida Grande",arial,sans-serif;
+  font-size: 16px;
+  height: 34px;
+  margin-left: 40px;
+}
+
+#players-label {
+    margin-left: 150px;
+}
+
+#difficulty-label {
+    margin-left: 150px;
+}
+
+.selector {
+   background: #8b8989;
+   width: 150px;
+   padding: 5px;
+   font-size: 16px;
+   text-color: white;
+   border: 1px solid #8b8989;
+   height: 34px;
+}
+
+/* gameplay */
+
+table {
+  float: left;
+  margin-left: 10px;
+  border: 10px solid black;
+}
+
+table td a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.open-square {
+  background-color: yellow;
+  height: 70px;
+  width: 70px;
+  border: 1px solid black;
+}
+
+.closed-square {
+  background-color: black;
+  height: 70px;
+  width: 70px;
+  border: 1px solid black;
+}
+
+.corner {
+  background-color: white;
+  height: 30px;
+  width: 30px;
+  border: 1px solid black;
+}
+
+.column-label {
+  background-color: green;
+  height: 30px;
+  width: 70px;
+  border: 1px solid black;
+  text-align: center;
+}
+.row-label {
+  background-color: green;
+  height: 70px;
+  width: 30px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.move-history {
+  float: left;
+  background-color: yellow;
+  height: 350px;
+  width: 500px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+}
+
+.game-info {
+  float: left;
+  background-color: purple;
+  height: 300px;
+  width: 500px;
+  margin-left: 10px;
+  border: 1px solid black;
+}
