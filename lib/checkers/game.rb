@@ -4,13 +4,13 @@ class Game
 
   def initialize(view)
     @view = view
-    @current_player = :red
+    #@current_player = :red
     @bs = BoardSurvey.new
     @evaluation = Evaluation.new
     @input = UserInput.new
     @move_check = MoveCheck.new
     @board = Board.new
-    @game_board = @board.create_board
+    #@game_board = @board.create_board
     @minmax = Minimax.new(@bs, @evaluation)
     @number_of_players = 'two'
     @difficulty = 0

@@ -139,3 +139,8 @@ table td a {
   margin-left: 10px;
   border: 1px solid black;
 }
+
+p #move-feedback {
+  font: "lucida Grande",arial,sans-serif;
+  font-size: 16px;
+}

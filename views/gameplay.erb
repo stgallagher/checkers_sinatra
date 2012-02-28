@@ -130,7 +130,10 @@
 -->
 
 <% LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] %>
+<script>
 
+
+</script>
 <div>
   <table>
     <tr id="column-labels">
@@ -148,11 +151,11 @@
               <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "closed-square"></td>
           <% else %>
             <% if @board[row - 1][square - 1].nil? %>
-                <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>" ></a></td>
+                <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"></a></td>
             <% elsif @board[row - 1][square - 1].color == :red %>
-                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>" ><img src="/img/red_checker.png" alt="red checker" /></a></td>
+              <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"><img src="/img/red_checker.png" alt="red checker" /></a></td>
             <% else %>
-                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>" ><img src="/img/black_checker.png" alt="black checker" /></a></td>
+                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"><img src="/img/black_checker.png" alt="black checker" /></a></td>
             <% end %>
           <% end %>
         <% else %>
@@ -160,11 +163,11 @@
               <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "closed-square"></td>
           <% else %>
             <% if @board[row - 1][square - 1].nil? %>
-                <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>"></a></td>
+                <td id=<%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"></a></td>
             <% elsif @board[row - 1][square - 1].color == :black %>
-                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>" ><img src="/img/black_checker.png" alt="black checker" /></a></td>
+                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"><img src="/img/black_checker.png" alt="black checker" /></a></td>
             <% else %>
-                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %>" ><img src="/img/red_checker.png" alt="red checker" /></a></td>
+                <td id= <%= "#{LETTERS[square - 1]}#{row}" %> class= "open-square"><a href="/gameplay/<%= "#{LETTERS[square - 1]}#{row}" %><%= "?from=#{@from}" %><%= "&to=#{@to}" %><%= "&player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>"><img src="/img/red_checker.png" alt="red checker" /></a></td>
             <% end %>
           <% end %>
         <% end %>
@@ -180,4 +183,9 @@
       <td class="corner"></td>
     </tr>
   </table>
+</div>
+<div class="move-history" >
+</div>
+<div class="game-info" >
+  <p id="move-feedback"><%= @message %></p>
 </div>

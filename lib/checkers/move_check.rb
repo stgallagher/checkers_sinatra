@@ -9,7 +9,7 @@ class MoveCheck
 
   def move_validator(game, board, current_player, x_origin, y_origin, x_destination, y_destination)
     message = nil
-
+    game.current_player = current_player
     case
     when (@consecutive_jumps and board[x_origin][y_origin] != @consecutive_jumper)
       message =  "You cannot jump with a different checker"
@@ -65,7 +65,7 @@ class MoveCheck
 
     if message == nil or (message == "jumping move" and @survey.any_jumps_left?(board, current_player, x_destination, y_destination)== false)
        if @consecutive_jumps == false
-       game.current_player = Game.switch_player(game.current_player)
+        game.current_player = Game.switch_player(current_player)
        end
     end
     message

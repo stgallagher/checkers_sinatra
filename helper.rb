@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'sinatra'
 require_relative 'lib/checkers/board'
 require_relative 'lib/checkers/checker'
 require_relative 'lib/checkers/board_survey'
@@ -9,46 +7,17 @@ require_relative 'lib/checkers/minimax'
 require_relative 'lib/checkers/move_check'
 require_relative 'lib/checkers/user_input'
 
-  COLUMN_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
-  before do
+COLUMN_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+
+class Helper
+
+  def initialize
     @game = Game.new(nil)
-    @mc = @game.move_check
+    @mc = MoveCheck.new
   end
 
-  before'/gameplay'  do
-    @board = @game.board.create_board
-    @player = :red
-  end
-
-  enable :sessions
-
-  get '/' do
-    erb :index
-  end
-
-  get '/gameplay' do
-    erb :gameplay
-  end
-
-  get '/gameplay/:game_state' do |game_state|
-    @from = params[:game_state]
-
-    if params[:from] != ""
-      p "game_play path :: in move_checker branch"
-      message = move_checker(params[:from], params[:game_state], params[:player], params[:board])
-    else
-      @board = game_state_string_to_board(params[:board])
-      session[:player] = params[:player] if params[:player].nil? == false
-      @player = session[:player]
-    end
-    p " gameplay path :: move message = #{message}"
-    erb :gameplay
-  end
-
-  helpers do
-
-    def board_to_game_state_string(board)
+  def board_to_game_state_string(board)
       output_string = ""
       (0..7).each do |row|
         (0..7).each do |col|
@@ -90,22 +59,15 @@ require_relative 'lib/checkers/user_input'
       end
     end
 
-    def move_checker(from, to, player, board)
+    def move_checker(from, to, board)
       move = translate_move_squares_into_move(from, to)
       game_board = game_state_string_to_board(board)
-      p "IN MOVE_CHECKER => Before move validator move -> #{move.inspect}"
-      p "IN MOVE_CHECKER => Before move validator player-> #{player.inspect}"
-      p "IN MOVE_CHECKER => Before move validator @game.current_player-> #{@game.current_player.inspect}"
       #p "IN MOVE_CHECKER => Before move validator game_board -> #{game_board}"
-      @message = @mc.move_validator(@game, game_board, player.to_sym, move[0], move[1], move[2], move[3])
+      message = @mc.move_validator(@game, game_board, :red, move[0], move[1], move[2], move[3])
       #p "IN MOVE_CHECKER => After move validator game_board -> #{game_board}"
-      p "IN MOVE_CHECKER => After @game.current_player -> #{@game.current_player.inspect}"
       #p "IN MOVE_CHECKER => After move validator @game.game_board -> #{@game.game_board}"
-      @from = nil
       @board = game_board
-      session[:player] = @game.current_player if @game.current_player.nil? == false
-      @player = session[:player]
-      @message
+      message
     end
 
     def translate_move_squares_into_move(from, to)
@@ -126,5 +88,4 @@ require_relative 'lib/checkers/user_input'
       coords.reverse
     end
 
-  end
-
+end
