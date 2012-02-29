@@ -3,7 +3,7 @@
   <head>
     <title>Checkers</title>
     <% if @computers_turn %>
-      <meta HTTP-EQUIV="REFRESH" content="1; url=/computersturn/A<%= "?player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>">
+      <meta HTTP-EQUIV="REFRESH" content="0; url=/computersturn/A<%= "?player=#{@player}" %><%= "&board=#{board_to_game_state_string(@board)}" %>">
     <% end %>
     <meta content="Checkers game with a Sinatra interface." name="description" />
     <meta charset=utf-8 >
