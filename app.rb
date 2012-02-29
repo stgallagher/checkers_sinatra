@@ -14,11 +14,23 @@ require_relative 'lib/checkers/user_input'
   before do
     @game = Game.new(nil)
     @mc = @game.move_check
+    @number_of_players =  session[:players]
+    @difficulty = difficulty_converter(session[:difficulty])
+      p "IN BEFOREALL :: @difficulty = #{@difficulty}, session[:difficulty] = #{session[:difficulty].inspect}"
+    bs = BoardSurvey.new
+    evaluator = Evaluation.new
+    @minmax = Minimax.new(bs, evaluator)
   end
 
   before'/gameplay'  do
     @board = @game.board.create_board
+    session[:player] = :red
+    @difficulty = difficulty_converter(params[:difficulty])
     @player = :red
+    if @number_of_players == :one
+      p "IN BEFOREGAMEPLAY :: @difficulty = #{@difficulty}, @player = #{@player}, @board = #{@board}"
+      computer_player_move(@difficulty, @player, @board)
+    end
   end
 
   enable :sessions
@@ -31,22 +43,94 @@ require_relative 'lib/checkers/user_input'
     erb :gameplay
   end
 
+  post '/gameplay' do
+    @number_of_players = params[:players].to_sym
+    session[:players] = @number_of_players
+    session[:difficulty] = params[:difficulty]
+    @difficulty = difficulty_converter(params[:difficulty])
+    erb :gameplay
+  end
+
+  get '/computersturn/:game_state' do |game_state|
+      p "IN COMPUTERSTURN :: @difficulty = #{@difficulty}, @player = #{@player}, @board = #{@board}"
+    computer_player_move(@difficulty, params[:player].to_sym, params[:board])
+    if @game_over
+      erb :gameover
+    else
+      erb :gameplay
+    end
+  end
+
   get '/gameplay/:game_state' do |game_state|
     @from = params[:game_state]
 
     if params[:from] != ""
-      p "game_play path :: in move_checker branch"
-      message = move_checker(params[:from], params[:game_state], params[:player], params[:board])
+      human_player_move(params[:from], params[:game_state], params[:player], params[:board])
+      if @number_of_players == :one and @player == :red
+        @computers_turn = true
+      end
     else
       @board = game_state_string_to_board(params[:board])
       session[:player] = params[:player] if params[:player].nil? == false
       @player = session[:player]
     end
-    p " gameplay path :: move message = #{message}"
-    erb :gameplay
+
+    if @game_over
+      erb :gameover
+    else
+      erb :gameplay
+    end
+  end
+
+  get '/loadgame' do
+    erb :test
   end
 
   helpers do
+
+    def game_flow(number_of_players, difficulty, from, to, player, board)
+      if (number_of_players == :none or number_of_players == :one) and player.to_sym == :red
+        computer_player_move(difficulty, player, board)
+      else
+        human_player_move(from, to, player, board)
+      end
+    end
+
+    def computer_player_move(difficulty, player, board)
+      board = game_state_string_to_board(board) if board.class == String
+      move = @minmax.best_move_negamax(board, player, 4, difficulty)
+      if move.nil?
+
+      end
+      if move[0].instance_of?(Array)
+        move.each do |single_move|
+          message = @mc.move_validator(@game, board, :red,  single_move[0], single_move[1], single_move[2], single_move[3])
+          sleep(1)
+        end
+      else
+        @message = @mc.move_validator(@game, board, :red,  move[0], move[1], move[2], move[3])
+      end
+      session[:player] = @game.current_player if @game.current_player.nil? == false
+      @board = board
+      @player = session[:player]
+    end
+
+    def human_player_move(from, to, player, board)
+      move_checker(from, to, player, board)
+    end
+
+    def move_checker(from, to, player, board)
+      move = translate_move_squares_into_move(from, to)
+      game_board = game_state_string_to_board(board)
+
+      @message = @mc.move_validator(@game, game_board, player.to_sym, move[0], move[1], move[2], move[3])
+
+      @from = nil
+      @board = game_board
+
+      session[:player] = @game.current_player if @game.current_player.nil? == false
+      @player = session[:player]
+    end
 
     def board_to_game_state_string(board)
       output_string = ""
@@ -90,23 +174,7 @@ require_relative 'lib/checkers/user_input'
       end
     end
 
-    def move_checker(from, to, player, board)
-      move = translate_move_squares_into_move(from, to)
-      game_board = game_state_string_to_board(board)
-      p "IN MOVE_CHECKER => Before move validator move -> #{move.inspect}"
-      p "IN MOVE_CHECKER => Before move validator player-> #{player.inspect}"
-      p "IN MOVE_CHECKER => Before move validator @game.current_player-> #{@game.current_player.inspect}"
-      #p "IN MOVE_CHECKER => Before move validator game_board -> #{game_board}"
-      @message = @mc.move_validator(@game, game_board, player.to_sym, move[0], move[1], move[2], move[3])
-      #p "IN MOVE_CHECKER => After move validator game_board -> #{game_board}"
-      p "IN MOVE_CHECKER => After @game.current_player -> #{@game.current_player.inspect}"
-      #p "IN MOVE_CHECKER => After move validator @game.game_board -> #{@game.game_board}"
-      @from = nil
-      @board = game_board
-      session[:player] = @game.current_player if @game.current_player.nil? == false
-      @player = session[:player]
-      @message
-    end
+
 
     def translate_move_squares_into_move(from, to)
       first  = board_square_to_coordinate_pair(from)
@@ -124,6 +192,17 @@ require_relative 'lib/checkers/user_input'
         end
       end
       coords.reverse
+    end
+
+    def difficulty_converter(difficulty)
+      if difficulty == 'Easy'
+        difficulty = 1
+      elsif difficulty == 'Board Scoring'
+        difficulty = 3
+      elsif difficulty == 'Checker Counting'
+        difficulty = 2
+      end
+      difficulty
     end
 
   end
