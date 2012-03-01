@@ -54,7 +54,7 @@ require_relative 'lib/checkers/user_input'
   get '/computersturn/:game_state' do |game_state|
       p "IN COMPUTERSTURN :: @difficulty = #{@difficulty}, @player = #{@player}, @board = #{@board}"
     computer_player_move(@difficulty, params[:player].to_sym, params[:board])
-    if @game_over
+    if @game_over or no_checkers_left(@board)
       erb :gameover
     else
       erb :gameplay
@@ -75,7 +75,7 @@ require_relative 'lib/checkers/user_input'
       @player = session[:player]
     end
 
-    if @winner
+    if @winner or no_checkers_left(@board)
       erb :gameover
     else
       erb :gameplay
@@ -88,6 +88,26 @@ require_relative 'lib/checkers/user_input'
 
   helpers do
 
+    def no_checkers_left(board)
+      red_count = 0
+      black_count = 0
+
+      (0..7).each do |row|
+        (0..7).each do |col|
+          if board[row][col].nil? == false
+            if board[row][col].color == :red
+              red_count += 1
+            else
+              black_count += 1
+            end
+          end
+        end
+      end
+
+      @winner = :red if black_count == 0
+      @winner = :black if red_count == 0
+      red_count == 0 or black_count == 0
+    end
     def computer_player_move(difficulty, player, board)
       board = game_state_string_to_board(board) if board.class == String
       move = @minmax.best_move_negamax(board, player, 4, difficulty)

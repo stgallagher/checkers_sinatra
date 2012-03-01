@@ -58,4 +58,13 @@ describe "helper" do
     end
   end
 
+  describe "no checkers left" do
+    it "should tell when no checkers are left" do
+      board = Board.new
+      empty_board = board.create_test_board
+      board.add_checker(empty_board, :red, 3, 3)
+      @h.no_checkers_left(empty_board).should == true
+    end
+  end
+
 end

@@ -17,6 +17,27 @@ class Helper
     @mc = MoveCheck.new
   end
 
+  def no_checkers_left(board)
+    red_count = 0
+    black_count = 0
+
+    (0..7).each do |row|
+      (0..7).each do |col|
+        if board[row][col].nil? == false
+          if board[row][col].color == :red
+            red_count += 1
+          else
+            black_count += 1
+          end
+        end
+      end
+    end
+
+    @winner = :red if black_count == 0
+    @winner = :black if red_count == 0
+    red_count == 0 or black_count == 0
+  end
+
   def board_to_game_state_string(board)
       output_string = ""
       (0..7).each do |row|
