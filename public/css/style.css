@@ -134,7 +134,7 @@ table td a {
 .game-info {
   float: left;
   background-color: purple;
-  height: 300px;
+  height: 500px;
   width: 500px;
   margin-left: 10px;
   border: 1px solid black;
@@ -143,4 +143,16 @@ table td a {
 p #move-feedback {
   font: "lucida Grande",arial,sans-serif;
   font-size: 16px;
+}
+
+/* gameover */
+
+div #gameover{
+  background-color: purple;
+  height: 500px;
+  width: 500px;
+  margin-left: 200px;
+  border: 1px solid black;
+  font: "lucida Grande",arial,sans-serif;
+  font-size: 45px;
 }

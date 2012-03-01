@@ -75,7 +75,7 @@ require_relative 'lib/checkers/user_input'
       @player = session[:player]
     end
 
-    if @game_over
+    if @winner
       erb :gameover
     else
       erb :gameplay
@@ -88,24 +88,15 @@ require_relative 'lib/checkers/user_input'
 
   helpers do
 
-    def game_flow(number_of_players, difficulty, from, to, player, board)
-      if (number_of_players == :none or number_of_players == :one) and player.to_sym == :red
-        computer_player_move(difficulty, player, board)
-      else
-        human_player_move(from, to, player, board)
-      end
-    end
-
     def computer_player_move(difficulty, player, board)
       board = game_state_string_to_board(board) if board.class == String
       move = @minmax.best_move_negamax(board, player, 4, difficulty)
       if move.nil?
-
+        @winner = :black
       end
       if move[0].instance_of?(Array)
         move.each do |single_move|
           message = @mc.move_validator(@game, board, :red,  single_move[0], single_move[1], single_move[2], single_move[3])
-          sleep(1)
         end
       else
         @message = @mc.move_validator(@game, board, :red,  move[0], move[1], move[2], move[3])
@@ -121,6 +112,9 @@ require_relative 'lib/checkers/user_input'
 
     def move_checker(from, to, player, board)
       move = translate_move_squares_into_move(from, to)
+      if move.nil?
+        @winner = player == :red ? :black : :red
+      end
       game_board = game_state_string_to_board(board)
 
       @message = @mc.move_validator(@game, game_board, player.to_sym, move[0], move[1], move[2], move[3])
@@ -138,9 +132,13 @@ require_relative 'lib/checkers/user_input'
         (0..7).each do |col|
           if board[row][col].nil?
             output_string << '_'
+          elsif board[row][col].color == :red and board[row][col].is_king?
+            output_string << 's'
           elsif board[row][col].color == :red
             output_string << 'r'
-          else
+          elsif board[row][col].color == :black and board[row][col].is_king?
+            output_string << 'c'
+          elsif board[row][col].color == :black
             output_string << 'b'
           end
         end
@@ -169,12 +167,18 @@ require_relative 'lib/checkers/user_input'
     def create_checker(checker, x, y)
       if checker == 'r'
         return Checker.new( x, y, :red)
-      else
+      elsif checker == 's'
+        created_checker = Checker.new( x, y, :red)
+        created_checker.make_king
+        return created_checker
+      elsif checker == 'b'
         return Checker.new( x, y, :black)
+      elsif checker == 'c'
+        created_checker = Checker.new( x, y, :black)
+        created_checker.make_king
+        return created_checker
       end
     end
-
-
 
     def translate_move_squares_into_move(from, to)
       first  = board_square_to_coordinate_pair(from)
