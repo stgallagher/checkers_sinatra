@@ -58,12 +58,12 @@ body {
 }
 
 #difficulty-label {
-    margin-left: 150px;
+    margin-left: 50px;
 }
 
 .selector {
    background: #8b8989;
-   width: 150px;
+   width: 200px;
    padding: 5px;
    font-size: 16px;
    text-color: white;
@@ -74,8 +74,9 @@ body {
 /* gameplay */
 
 table {
-  float: left;
-  margin-left: 10px;
+  /* float: left; */
+  margin-left: 50px;
+  margin-top: 50px;
   border: 10px solid black;
 }
 
@@ -132,27 +133,33 @@ table td a {
 }
 
 .game-info {
-  float: left;
-  background-color: purple;
-  height: 500px;
-  width: 500px;
-  margin-left: 10px;
+  /* float: left; */
+  background-color: black;
+  height: 50px;
+  width: 620px;
+  margin-top: 20px;
+  margin-left: 91px;
   border: 1px solid black;
 }
 
-p #move-feedback {
+p#move-feedback {
   font: "lucida Grande",arial,sans-serif;
   font-size: 16px;
+  padding-left: 20px;
 }
 
 /* gameover */
 
-div #gameover{
-  background-color: purple;
-  height: 500px;
+.gameover {
+  background-color: black;
+  height: 300px;
   width: 500px;
-  margin-left: 200px;
-  border: 1px solid black;
+  margin-left: 300px;
   font: "lucida Grande",arial,sans-serif;
-  font-size: 45px;
+  font-size: 75px;
+  text-align: center;
+  padding-top: 200px;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
 }

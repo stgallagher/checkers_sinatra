@@ -16,19 +16,19 @@ require_relative 'lib/checkers/user_input'
     @mc = @game.move_check
     @number_of_players =  session[:players]
     @difficulty = difficulty_converter(session[:difficulty])
-      p "IN BEFOREALL :: @difficulty = #{@difficulty}, session[:difficulty] = #{session[:difficulty].inspect}"
     bs = BoardSurvey.new
     evaluator = Evaluation.new
     @minmax = Minimax.new(bs, evaluator)
   end
 
   before'/gameplay'  do
-    @board = @game.board.create_board
+    @board = @game.board.create_test_board
+    @game.board.add_checker(@board, :red, 2, 2)
+    @game.board.add_checker(@board, :black, 7, 7)
     session[:player] = :red
     @difficulty = difficulty_converter(params[:difficulty])
     @player = :red
     if @number_of_players == :one
-      p "IN BEFOREGAMEPLAY :: @difficulty = #{@difficulty}, @player = #{@player}, @board = #{@board}"
       computer_player_move(@difficulty, @player, @board)
     end
   end
@@ -52,7 +52,6 @@ require_relative 'lib/checkers/user_input'
   end
 
   get '/computersturn/:game_state' do |game_state|
-      p "IN COMPUTERSTURN :: @difficulty = #{@difficulty}, @player = #{@player}, @board = #{@board}"
     computer_player_move(@difficulty, params[:player].to_sym, params[:board])
     if @game_over or no_checkers_left(@board)
       erb :gameover
@@ -84,6 +83,11 @@ require_relative 'lib/checkers/user_input'
 
   get '/loadgame' do
     erb :test
+  end
+
+  get '/gameover' do
+    @winner = :black
+    erb :gameover
   end
 
   helpers do
@@ -122,6 +126,7 @@ require_relative 'lib/checkers/user_input'
         @message = @mc.move_validator(@game, board, :red,  move[0], move[1], move[2], move[3])
       end
       session[:player] = @game.current_player if @game.current_player.nil? == false
+      @message = "Successful move" if @message.nil?
       @board = board
       @player = session[:player]
     end
@@ -141,7 +146,7 @@ require_relative 'lib/checkers/user_input'
 
       @from = nil
       @board = game_board
-
+      @message = "Successful move" if @message.nil?
       session[:player] = @game.current_player if @game.current_player.nil? == false
       @player = session[:player]
     end
