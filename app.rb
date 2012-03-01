@@ -22,9 +22,7 @@ require_relative 'lib/checkers/user_input'
   end
 
   before'/gameplay'  do
-    @board = @game.board.create_test_board
-    @game.board.add_checker(@board, :red, 2, 2)
-    @game.board.add_checker(@board, :black, 7, 7)
+    @board = @game.board.create_board
     session[:player] = :red
     @difficulty = difficulty_converter(params[:difficulty])
     @player = :red
